@@ -7,6 +7,7 @@
 //
 
 #import "AppDelegate.h"
+#import "SearchViewController.h"
 #import <Fabric/Fabric.h>
 #import <TwitterKit/TwitterKit.h>
 
@@ -21,6 +22,9 @@
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
     // Override point for customization after application launch.
     [Fabric with:@[TwitterKit]];
+    
+    SearchViewController* rootViewController = (SearchViewController*)self.window.rootViewController;
+    rootViewController.managedObjectContext = self.managedObjectContext;
 
     return YES;
 }

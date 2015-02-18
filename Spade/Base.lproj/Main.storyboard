@@ -16,10 +16,18 @@
                         <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
+                            <view contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Npn-1c-KfB" customClass="TwitterBar">
+                                <rect key="frame" x="0.0" y="500" width="600" height="100"/>
+                                <color key="backgroundColor" red="0.3509428879" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
+                            </view>
                             <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="none" rowHeight="44" sectionHeaderHeight="22" sectionFooterHeight="22" translatesAutoresizingMaskIntoConstraints="NO" id="GHE-vY-mkJ">
                                 <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 <inset key="separatorInset" minX="0.0" minY="0.0" maxX="0.0" maxY="0.0"/>
+                                <connections>
+                                    <outlet property="dataSource" destination="KxG-lK-1jY" id="9kR-mh-7bN"/>
+                                    <outlet property="delegate" destination="KxG-lK-1jY" id="PFs-PD-nub"/>
+                                </connections>
                             </tableView>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
@@ -30,6 +38,10 @@
                             <constraint firstItem="GHE-vY-mkJ" firstAttribute="bottom" secondItem="QkE-P1-7mb" secondAttribute="top" id="hCc-ZB-Im9"/>
                         </constraints>
                     </view>
+                    <connections>
+                        <outlet property="tableView" destination="GHE-vY-mkJ" id="QMy-LT-yQp"/>
+                        <outlet property="twitterBar" destination="Npn-1c-KfB" id="aYn-ae-eCo"/>
+                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="KES-La-dYU" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>

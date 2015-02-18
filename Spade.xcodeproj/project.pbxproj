@@ -126,10 +126,10 @@
 				4D444A3C1A9534AA00D4082F /* Images.xcassets */,
 				4D444A3E1A9534AA00D4082F /* LaunchScreen.xib */,
 				4D444A331A9534AA00D4082F /* Spade.xcdatamodeld */,
-				4D444A2C1A9534AA00D4082F /* Supporting Files */,
 				4D444A611A9552D600D4082F /* TwitterBar.h */,
 				4D444A621A9552D600D4082F /* TwitterBar.m */,
 				4D444A631A9552D600D4082F /* TwitterBar.xib */,
+				4D444A2C1A9534AA00D4082F /* Supporting Files */,
 			);
 			path = Spade;
 			sourceTree = "<group>";
