@@ -8,6 +8,8 @@
 
 #pragma mark - Color Palette
 
+#import "UIColor+Hex.h"
+
 #define PRIMARY_COLOR           [UIColor colorWithHexString:@"673AB7"]
 #define DARK_PRIMARY_COLOR      [UIColor colorWithHexString:@"512DA8"]
 #define LIGHT_PRIMARY_COLOR     [UIColor colorWithHexString:@"D1C4E9"]

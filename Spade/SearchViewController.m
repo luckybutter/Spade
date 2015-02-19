@@ -11,7 +11,6 @@
 #import "TwitterBar.h"
 #import <TwitterKit/TwitterKit.h>
 #import <QuartzCore/QuartzCore.h>
-#import "UIColor+Hex.h"
 
 #define RIPPLE_DURATION 0.70
 #define RIPPLE_DELAY (RIPPLE_DURATION/2.0)
@@ -53,10 +52,7 @@
     _twitterButton.transform = CGAffineTransformMakeScale(0.001, 0.001);
     
     //logging out everytime for ease
-    [[Twitter sharedInstance] logOut];
-}
-
-- (void)viewWillAppear:(BOOL)animated {
+//    [[Twitter sharedInstance] logOut];
 }
 
 - (void)viewDidAppear:(BOOL)animated {
@@ -100,8 +96,8 @@
             [UIView animateWithDuration:0.2 delay:0.0 options:UIViewAnimationOptionCurveEaseInOut animations:^{
             _twitterButton.transform = CGAffineTransformMakeScale(1, 1);
             } completion:^(BOOL finished) {
-                [UIView animateWithDuration:0.4 delay:0.5 options:UIViewAnimationOptionCurveEaseInOut animations:^{
-                    _twitterButton.center = CGPointMake(_twitterButton.center.x, self.view.frame.size.height - _twitterButton.frame.size.height/2 - 10);
+                [UIView animateWithDuration:0.5 delay:0.5 options:UIViewAnimationOptionCurveEaseInOut animations:^{
+                    _twitterButton.center = CGPointMake(_twitterButton.center.x, self.view.frame.size.height - _twitterButton.frame.size.height/2 - 5);
                 } completion:^(BOOL finished) {
                     _twitterButton.userInteractionEnabled = YES;
                 }];
