@@ -19,8 +19,7 @@
 		4D444A5B1A95356200D4082F /* TwitterKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4D444A581A95356200D4082F /* TwitterKit.framework */; };
 		4D444A5C1A95356200D4082F /* TwitterKitResources.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 4D444A591A95356200D4082F /* TwitterKitResources.bundle */; };
 		4D444A5D1A95356200D4082F /* Fabric.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4D444A5A1A95356200D4082F /* Fabric.framework */; };
-		4D444A641A9552D600D4082F /* TwitterBar.m in Sources */ = {isa = PBXBuildFile; fileRef = 4D444A621A9552D600D4082F /* TwitterBar.m */; };
-		4D444A651A9552D600D4082F /* TwitterBar.xib in Resources */ = {isa = PBXBuildFile; fileRef = 4D444A631A9552D600D4082F /* TwitterBar.xib */; };
+		4D444AA11A95608D00D4082F /* UIColor+Hex.m in Sources */ = {isa = PBXBuildFile; fileRef = 4D444AA01A95608D00D4082F /* UIColor+Hex.m */; };
 		DA7D34306977C5D3AFABC69C /* libPods.a in Frameworks */ = {isa = PBXBuildFile; fileRef = DBD097A53E8AADB2A153924A /* libPods.a */; };
 /* End PBXBuildFile section */
 
@@ -55,9 +54,9 @@
 		4D444A581A95356200D4082F /* TwitterKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = TwitterKit.framework; sourceTree = "<group>"; };
 		4D444A591A95356200D4082F /* TwitterKitResources.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; name = TwitterKitResources.bundle; path = TwitterKit.framework/Versions/A/Resources/TwitterKitResources.bundle; sourceTree = "<group>"; };
 		4D444A5A1A95356200D4082F /* Fabric.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Fabric.framework; sourceTree = "<group>"; };
-		4D444A611A9552D600D4082F /* TwitterBar.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TwitterBar.h; sourceTree = "<group>"; };
-		4D444A621A9552D600D4082F /* TwitterBar.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TwitterBar.m; sourceTree = "<group>"; };
-		4D444A631A9552D600D4082F /* TwitterBar.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = TwitterBar.xib; sourceTree = "<group>"; };
+		4D444A9F1A95601800D4082F /* UIColor+Hex.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "UIColor+Hex.h"; sourceTree = "<group>"; };
+		4D444AA01A95608D00D4082F /* UIColor+Hex.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIColor+Hex.m"; sourceTree = "<group>"; };
+		4D444AA21A96253F00D4082F /* PrecompiledHeader.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = PrecompiledHeader.pch; sourceTree = "<group>"; };
 		DBD097A53E8AADB2A153924A /* libPods.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libPods.a; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
@@ -117,6 +116,7 @@
 		4D444A2B1A9534AA00D4082F /* Spade */ = {
 			isa = PBXGroup;
 			children = (
+				4D444A9E1A955FF500D4082F /* Categories */,
 				4D444A551A9534DD00D4082F /* Podfile */,
 				4D444A301A9534AA00D4082F /* AppDelegate.h */,
 				4D444A311A9534AA00D4082F /* AppDelegate.m */,
@@ -126,10 +126,8 @@
 				4D444A3C1A9534AA00D4082F /* Images.xcassets */,
 				4D444A3E1A9534AA00D4082F /* LaunchScreen.xib */,
 				4D444A331A9534AA00D4082F /* Spade.xcdatamodeld */,
-				4D444A611A9552D600D4082F /* TwitterBar.h */,
-				4D444A621A9552D600D4082F /* TwitterBar.m */,
-				4D444A631A9552D600D4082F /* TwitterBar.xib */,
 				4D444A2C1A9534AA00D4082F /* Supporting Files */,
+				4D444AA21A96253F00D4082F /* PrecompiledHeader.pch */,
 			);
 			path = Spade;
 			sourceTree = "<group>";
@@ -158,6 +156,15 @@
 				4D444A4A1A9534AA00D4082F /* Info.plist */,
 			);
 			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		4D444A9E1A955FF500D4082F /* Categories */ = {
+			isa = PBXGroup;
+			children = (
+				4D444A9F1A95601800D4082F /* UIColor+Hex.h */,
+				4D444AA01A95608D00D4082F /* UIColor+Hex.m */,
+			);
+			name = Categories;
 			sourceTree = "<group>";
 		};
 		A3E03A5A47884E5451A6CC2F /* Frameworks */ = {
@@ -254,7 +261,6 @@
 				4D444A3B1A9534AA00D4082F /* Main.storyboard in Resources */,
 				4D444A401A9534AA00D4082F /* LaunchScreen.xib in Resources */,
 				4D444A561A9534DD00D4082F /* Podfile in Resources */,
-				4D444A651A9552D600D4082F /* TwitterBar.xib in Resources */,
 				4D444A3D1A9534AA00D4082F /* Images.xcassets in Resources */,
 				4D444A5C1A95356200D4082F /* TwitterKitResources.bundle in Resources */,
 			);
@@ -320,7 +326,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				4D444A641A9552D600D4082F /* TwitterBar.m in Sources */,
+				4D444AA11A95608D00D4082F /* UIColor+Hex.m in Sources */,
 				4D444A321A9534AA00D4082F /* AppDelegate.m in Sources */,
 				4D444A2F1A9534AA00D4082F /* main.m in Sources */,
 				4D444A381A9534AA00D4082F /* SearchViewController.m in Sources */,
@@ -451,6 +457,7 @@
 					"$(inherited)",
 					"$(PROJECT_DIR)",
 				);
+				GCC_PREFIX_HEADER = Spade/PrecompiledHeader.pch;
 				INFOPLIST_FILE = Spade/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -466,6 +473,7 @@
 					"$(inherited)",
 					"$(PROJECT_DIR)",
 				);
+				GCC_PREFIX_HEADER = Spade/PrecompiledHeader.pch;
 				INFOPLIST_FILE = Spade/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_NAME = "$(TARGET_NAME)";

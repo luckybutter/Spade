@@ -16,13 +16,27 @@
                         <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <view contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Npn-1c-KfB" customClass="TwitterBar">
-                                <rect key="frame" x="0.0" y="500" width="600" height="100"/>
-                                <color key="backgroundColor" red="0.3509428879" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
-                            </view>
-                            <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="none" rowHeight="44" sectionHeaderHeight="22" sectionFooterHeight="22" translatesAutoresizingMaskIntoConstraints="NO" id="GHE-vY-mkJ">
+                            <button opaque="NO" userInteractionEnabled="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="bxJ-m0-ks3" userLabel="twitterButton">
+                                <rect key="frame" x="256" y="254.5" width="90" height="90"/>
+                                <color key="backgroundColor" red="0.29803921568627451" green="0.68627450980392157" blue="0.31372549019607843" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="90" id="U7U-y0-TN7"/>
+                                    <constraint firstAttribute="height" constant="90" id="hky-f4-TGi"/>
+                                </constraints>
+                                <inset key="contentEdgeInsets" minX="5" minY="5" maxX="0.0" maxY="0.0"/>
+                                <state key="normal" image="twitterWhite">
+                                    <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                </state>
+                            </button>
+                            <button hidden="YES" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="w3b-87-LJz" userLabel="loginButton" customClass="TWTRLogInButton">
+                                <rect key="frame" x="277" y="285" width="46" height="30"/>
+                                <state key="normal" title="Button">
+                                    <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                </state>
+                            </button>
+                            <tableView clipsSubviews="YES" contentMode="scaleToFill" misplaced="YES" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="none" rowHeight="44" sectionHeaderHeight="22" sectionFooterHeight="22" translatesAutoresizingMaskIntoConstraints="NO" id="GHE-vY-mkJ">
                                 <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
-                                <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                 <inset key="separatorInset" minX="0.0" minY="0.0" maxX="0.0" maxY="0.0"/>
                                 <connections>
                                     <outlet property="dataSource" destination="KxG-lK-1jY" id="9kR-mh-7bN"/>
@@ -30,17 +44,22 @@
                                 </connections>
                             </tableView>
                         </subviews>
-                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <color key="backgroundColor" red="0.40392156862745099" green="0.22745098039215686" blue="0.71764705882352942" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                         <constraints>
-                            <constraint firstAttribute="trailing" secondItem="GHE-vY-mkJ" secondAttribute="trailing" id="9ac-ZK-WY5"/>
-                            <constraint firstItem="GHE-vY-mkJ" firstAttribute="leading" secondItem="Cob-Tx-Bgn" secondAttribute="leading" id="KVB-oV-qQr"/>
-                            <constraint firstItem="GHE-vY-mkJ" firstAttribute="top" secondItem="Cob-Tx-Bgn" secondAttribute="top" id="WVz-5D-IiM"/>
-                            <constraint firstItem="GHE-vY-mkJ" firstAttribute="bottom" secondItem="QkE-P1-7mb" secondAttribute="top" id="hCc-ZB-Im9"/>
+                            <constraint firstAttribute="centerY" secondItem="bxJ-m0-ks3" secondAttribute="centerY" constant="0.5" id="BGO-ih-owz"/>
+                            <constraint firstItem="GHE-vY-mkJ" firstAttribute="bottom" secondItem="QkE-P1-7mb" secondAttribute="top" id="S2t-XJ-wsp"/>
+                            <constraint firstAttribute="width" secondItem="GHE-vY-mkJ" secondAttribute="width" id="S36-4p-VgP"/>
+                            <constraint firstAttribute="centerX" secondItem="w3b-87-LJz" secondAttribute="centerX" id="T2y-CT-Z5M"/>
+                            <constraint firstItem="GHE-vY-mkJ" firstAttribute="centerX" secondItem="bxJ-m0-ks3" secondAttribute="centerX" id="TFP-HH-Y2Q"/>
+                            <constraint firstAttribute="height" secondItem="GHE-vY-mkJ" secondAttribute="height" id="a7b-Wr-qlX"/>
+                            <constraint firstAttribute="centerY" secondItem="w3b-87-LJz" secondAttribute="centerY" id="cMo-Z7-JHq"/>
+                            <constraint firstAttribute="centerX" secondItem="bxJ-m0-ks3" secondAttribute="centerX" constant="-0.5" id="oy4-09-bsf"/>
                         </constraints>
                     </view>
                     <connections>
+                        <outlet property="loginButton" destination="w3b-87-LJz" id="LAm-Xb-Bl0"/>
                         <outlet property="tableView" destination="GHE-vY-mkJ" id="QMy-LT-yQp"/>
-                        <outlet property="twitterBar" destination="Npn-1c-KfB" id="aYn-ae-eCo"/>
+                        <outlet property="twitterButton" destination="bxJ-m0-ks3" id="LMB-uC-ahL"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="KES-La-dYU" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -48,4 +67,7 @@
             <point key="canvasLocation" x="119" y="652"/>
         </scene>
     </scenes>
+    <resources>
+        <image name="twitterWhite" width="60" height="49"/>
+    </resources>
 </document>

@@ -10,9 +10,19 @@
 #import <Fabric/Fabric.h>
 #import "TwitterBar.h"
 #import <TwitterKit/TwitterKit.h>
+#import <QuartzCore/QuartzCore.h>
+#import "UIColor+Hex.h"
 
-@interface SearchViewController ()
-@property (weak, nonatomic) IBOutlet TwitterBar *twitterBar;
+#define RIPPLE_DURATION 0.70
+#define RIPPLE_DELAY (RIPPLE_DURATION/2.0)
+
+@interface SearchViewController () {
+    UIView* whiteLayer;
+    UIView* lightPrimary;
+}
+
+@property (weak, nonatomic) IBOutlet TWTRLogInButton *loginButton;
+@property (weak, nonatomic) IBOutlet UIButton *twitterButton;
 
 @end
 
@@ -22,16 +32,83 @@
     [super viewDidLoad];
     // Do any additional setup after loading the view, typically from a nib.
     
+    int screenHeight = [UIScreen mainScreen].bounds.size.height+100;
+    whiteLayer = [[UIView alloc] initWithFrame:CGRectMake(0, 0, screenHeight, screenHeight)];
+    whiteLayer.layer.cornerRadius = whiteLayer.bounds.size.width / 2.0;
+    whiteLayer.backgroundColor = UIColor.whiteColor;
     
-//    if ([Twitter sharedInstance].session == nil) {
-//        _loginButton.logInCompletion =  ^(TWTRSession *session, NSError *error) {
-//            if (session) {
-//                NSLog(@"signed in as %@", [session userName]);
-//            } else {
-//                NSLog(@"error: %@", [error localizedDescription]);
-//            }
-//        };
-//    }
+    lightPrimary = [[UIView alloc] initWithFrame:CGRectMake(0, 0, screenHeight, screenHeight)];
+    lightPrimary.backgroundColor =  LIGHT_PRIMARY_COLOR;
+    lightPrimary.layer.cornerRadius = lightPrimary.bounds.size.width / 2.0;
+    
+    [self.view addSubview:lightPrimary];
+    [self.view addSubview:whiteLayer];
+    [self.view bringSubviewToFront:_loginButton];
+    
+    lightPrimary.center = whiteLayer.center = self.view.center;
+    lightPrimary.layer.anchorPoint = CGPointMake(0.5, 0.5);
+    whiteLayer.layer.anchorPoint = CGPointMake(0.5, 0.5);
+    
+    _twitterButton.layer.cornerRadius = _twitterButton.bounds.size.width / 2.0;
+    _twitterButton.transform = CGAffineTransformMakeScale(0.001, 0.001);
+    
+    //logging out everytime for ease
+    [[Twitter sharedInstance] logOut];
+}
+
+- (void)viewWillAppear:(BOOL)animated {
+}
+
+- (void)viewDidAppear:(BOOL)animated {
+    if ([Twitter sharedInstance].session == nil) {
+        _loginButton.hidden = false;
+        _loginButton.logInCompletion =  ^(TWTRSession *session, NSError *error) {
+            if (session) {
+                NSLog(@"signed in as %@", [session userName]);
+                [UIView animateWithDuration:.5 delay:0 options:UIViewAnimationOptionCurveEaseInOut animations:^{
+                    _loginButton.alpha = 0.0;
+                } completion:^(BOOL finished) {
+                    [self ripple];
+                }];
+            } else {
+                NSLog(@"error: %@", [error localizedDescription]);
+            }
+        };
+    } else {
+        [self ripple];
+    }
+}
+
+- (void)ripple {
+    //Rippling effect with circles
+    [UIView animateWithDuration:RIPPLE_DURATION delay:0 options:UIViewAnimationOptionCurveEaseInOut animations:^{
+        whiteLayer.transform = CGAffineTransformMakeScale(0.001, 0.001);
+    } completion: ^(BOOL finished) {
+        [whiteLayer removeFromSuperview];
+    }];
+
+    
+    [UIView animateWithDuration:RIPPLE_DURATION delay:RIPPLE_DELAY options:UIViewAnimationOptionCurveEaseInOut animations:^{
+        lightPrimary.transform = CGAffineTransformMakeScale(0.001, 0.001);
+    } completion:^(BOOL finished) {
+        [[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleLightContent];
+        [lightPrimary removeFromSuperview];
+        
+        [UIView animateWithDuration:0.35 delay:0.0 options:UIViewAnimationOptionCurveEaseInOut animations:^{
+            _twitterButton.transform = CGAffineTransformMakeScale(1.2, 1.2);
+        } completion:^(BOOL finished) {
+            [UIView animateWithDuration:0.2 delay:0.0 options:UIViewAnimationOptionCurveEaseInOut animations:^{
+            _twitterButton.transform = CGAffineTransformMakeScale(1, 1);
+            } completion:^(BOOL finished) {
+                [UIView animateWithDuration:0.4 delay:0.5 options:UIViewAnimationOptionCurveEaseInOut animations:^{
+                    _twitterButton.center = CGPointMake(_twitterButton.center.x, self.view.frame.size.height - _twitterButton.frame.size.height/2 - 10);
+                } completion:^(BOOL finished) {
+                    _twitterButton.userInteractionEnabled = YES;
+                }];
+            }];
+        }];
+    }];
+    
 }
 
 - (void)didReceiveMemoryWarning {
