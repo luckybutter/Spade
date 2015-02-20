@@ -12,6 +12,7 @@
 #import <TwitterKit/TwitterKit.h>
 #import <QuartzCore/QuartzCore.h>
 #import "MBProgressHUD.h"
+#import "AppDelegate.h"
 
 #define RIPPLE_DURATION 0.70
 #define RIPPLE_DELAY (RIPPLE_DURATION/2.0)
@@ -22,7 +23,7 @@ NSString* const TweetTableReuseIdentifier = @"TweetCell";
 NSString* const archiveKey = @"savedTweet";
 NSString* const entityName = @"Tweets";
 
-@interface SearchViewController () <NSFetchedResultsControllerDelegate, UITableViewDataSource, UITableViewDelegate, UITextFieldDelegate, TWTRTweetViewDelegate, UIScrollViewDelegate> {
+@interface SearchViewController () <NSFetchedResultsControllerDelegate, UITableViewDataSource, UITableViewDelegate, UITextFieldDelegate, TWTRTweetViewDelegate, UIScrollViewDelegate, UIAlertViewDelegate> {
     UIView* whiteLayer;
     UIView* lightPrimary;
     
@@ -45,7 +46,7 @@ NSString* const entityName = @"Tweets";
     [super viewDidLoad];
     // Do any additional setup after loading the view, typically from a nib.
     
-    int screenHeight = [UIScreen mainScreen].bounds.size.height+100;
+    int screenHeight = [UIScreen mainScreen].bounds.size.height+300;
     whiteLayer = [[UIView alloc] initWithFrame:CGRectMake(0, 0, screenHeight, screenHeight)];
     whiteLayer.layer.cornerRadius = whiteLayer.bounds.size.width / 2.0;
     whiteLayer.backgroundColor = UIColor.whiteColor;
@@ -88,13 +89,19 @@ NSString* const entityName = @"Tweets";
     _twitterSearchBar.leftView = button;
     
     [self.tableView registerClass:[TWTRTweetTableViewCell class] forCellReuseIdentifier:TweetTableReuseIdentifier];
+    [self.view sendSubviewToBack:self.tableView];
     savedTweets = [[NSArray alloc] init];
-    //logging out everytime for ease
-//    [[Twitter sharedInstance] logOut];
+    
+    AppDelegate *appDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
+    self.managedObjectContext = appDelegate.managedObjectContext;
 }
 
 - (void)dealloc {
     [[NSNotificationCenter defaultCenter] removeObserver:self];
+}
+
+-(BOOL)canBecomeFirstResponder {
+    return YES;
 }
 
 - (void)keyboardWasShown:(NSNotification *)notification
@@ -144,23 +151,23 @@ NSString* const entityName = @"Tweets";
 }
 
 - (void)viewDidAppear:(BOOL)animated {
-    if ([Twitter sharedInstance].session == nil) {
-        _loginButton.hidden = false;
-        _loginButton.logInCompletion =  ^(TWTRSession *session, NSError *error) {
-            if (session) {
-                NSLog(@"signed in as %@", [session userName]);
-                [UIView animateWithDuration:.5 delay:0 options:UIViewAnimationOptionCurveEaseInOut animations:^{
-                    _loginButton.alpha = 0.0;
-                } completion:^(BOOL finished) {
-                    [self ripple];
-                }];
-            } else {
-                NSLog(@"error: %@", [error localizedDescription]);
-            }
-        };
-    } else {
-        [self ripple];
+    [super viewDidAppear:animated];
+    [self becomeFirstResponder];
+    [self ripple];
+}
+
+- (void)motionEnded:(UIEventSubtype)motion withEvent:(UIEvent *)event
+{
+    if (motion == UIEventSubtypeMotionShake)
+    {
+        UIAlertView* possibleLogout = [[UIAlertView alloc] initWithTitle:@"Done searching?" message:@"Would you like to logout?" delegate:self cancelButtonTitle:@"YES" otherButtonTitles:@"NO", nil];
+        [possibleLogout show];
     }
+}
+
+- (void)viewWillDisappear:(BOOL)animated {
+    [self resignFirstResponder];
+    [super viewWillDisappear:animated];
 }
 
 - (void)didReceiveMemoryWarning {
@@ -193,6 +200,8 @@ NSString* const entityName = @"Tweets";
                     [_twitterButton layoutIfNeeded];
                 } completion:^(BOOL finished) {
                     _twitterButton.userInteractionEnabled = YES;
+                    [self.view bringSubviewToFront:_twitterButton];
+                    [self.view bringSubviewToFront:_twitterSearchBar];
                 }];
             }];
         }];
@@ -377,8 +386,9 @@ NSString* const entityName = @"Tweets";
             NSArray *tweetArray=[unarchiver decodeObjectForKey:archiveKey];
             [unarchiver finishDecoding];
             savedTweets = tweetArray;
-            
+            self.tableView.hidden = NO;
             [self.tableView reloadData];
+            [self.tableView setContentOffset:CGPointZero animated:YES];
         }
     }
 }
@@ -399,6 +409,15 @@ NSString* const entityName = @"Tweets";
     } else {
         _twitterButton.alpha = 1.0;
         _twitterButton.userInteractionEnabled = YES;
+    }
+}
+
+#pragma mark - UIAlertViewDelegate 
+
+- (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex {
+    if (buttonIndex == 0) {
+        [[Twitter sharedInstance] logOut];
+        [self.navigationController popViewControllerAnimated:YES];
     }
 }
 

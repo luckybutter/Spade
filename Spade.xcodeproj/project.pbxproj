@@ -20,9 +20,9 @@
 		4D444A5C1A95356200D4082F /* TwitterKitResources.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 4D444A591A95356200D4082F /* TwitterKitResources.bundle */; };
 		4D444A5D1A95356200D4082F /* Fabric.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4D444A5A1A95356200D4082F /* Fabric.framework */; };
 		4D444AA11A95608D00D4082F /* UIColor+Hex.m in Sources */ = {isa = PBXBuildFile; fileRef = 4D444AA01A95608D00D4082F /* UIColor+Hex.m */; };
-		4D444AA61A9660A200D4082F /* TwitterBar.xib in Resources */ = {isa = PBXBuildFile; fileRef = 4D444AA31A9660A200D4082F /* TwitterBar.xib */; };
 		4D444AA71A9660A200D4082F /* TwitterBar.m in Sources */ = {isa = PBXBuildFile; fileRef = 4D444AA41A9660A200D4082F /* TwitterBar.m */; };
 		4D444AAC1A9681C100D4082F /* UIView+Frame.m in Sources */ = {isa = PBXBuildFile; fileRef = 4D444AAB1A9681C100D4082F /* UIView+Frame.m */; };
+		4D79DB231A97941F000F6D25 /* BareBonesLoginViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4D79DB221A97941F000F6D25 /* BareBonesLoginViewController.m */; };
 		4DD7A1791A9741A4002FE208 /* NSString+Encode.m in Sources */ = {isa = PBXBuildFile; fileRef = 4DD7A1781A9741A4002FE208 /* NSString+Encode.m */; };
 		DA7D34306977C5D3AFABC69C /* libPods.a in Frameworks */ = {isa = PBXBuildFile; fileRef = DBD097A53E8AADB2A153924A /* libPods.a */; };
 /* End PBXBuildFile section */
@@ -61,11 +61,12 @@
 		4D444A9F1A95601800D4082F /* UIColor+Hex.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "UIColor+Hex.h"; sourceTree = "<group>"; };
 		4D444AA01A95608D00D4082F /* UIColor+Hex.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIColor+Hex.m"; sourceTree = "<group>"; };
 		4D444AA21A96253F00D4082F /* PrecompiledHeader.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = PrecompiledHeader.pch; sourceTree = "<group>"; };
-		4D444AA31A9660A200D4082F /* TwitterBar.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = TwitterBar.xib; sourceTree = "<group>"; };
 		4D444AA41A9660A200D4082F /* TwitterBar.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TwitterBar.m; sourceTree = "<group>"; };
 		4D444AA51A9660A200D4082F /* TwitterBar.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TwitterBar.h; sourceTree = "<group>"; };
 		4D444AAA1A9680A900D4082F /* UIView+Frame.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "UIView+Frame.h"; sourceTree = "<group>"; };
 		4D444AAB1A9681C100D4082F /* UIView+Frame.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIView+Frame.m"; sourceTree = "<group>"; };
+		4D79DB211A97941F000F6D25 /* BareBonesLoginViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BareBonesLoginViewController.h; sourceTree = "<group>"; };
+		4D79DB221A97941F000F6D25 /* BareBonesLoginViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BareBonesLoginViewController.m; sourceTree = "<group>"; };
 		4DD7A1771A974198002FE208 /* NSString+Encode.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "NSString+Encode.h"; sourceTree = "<group>"; };
 		4DD7A1781A9741A4002FE208 /* NSString+Encode.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSString+Encode.m"; sourceTree = "<group>"; };
 		DBD097A53E8AADB2A153924A /* libPods.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libPods.a; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -184,7 +185,6 @@
 			children = (
 				4D444A3C1A9534AA00D4082F /* Images.xcassets */,
 				4D444A391A9534AA00D4082F /* Main.storyboard */,
-				4D444AA31A9660A200D4082F /* TwitterBar.xib */,
 				4D444A3E1A9534AA00D4082F /* LaunchScreen.xib */,
 			);
 			name = UI;
@@ -197,6 +197,8 @@
 				4D444AA51A9660A200D4082F /* TwitterBar.h */,
 				4D444A361A9534AA00D4082F /* SearchViewController.h */,
 				4D444A371A9534AA00D4082F /* SearchViewController.m */,
+				4D79DB211A97941F000F6D25 /* BareBonesLoginViewController.h */,
+				4D79DB221A97941F000F6D25 /* BareBonesLoginViewController.m */,
 			);
 			name = Views/Controllers;
 			sourceTree = "<group>";
@@ -295,7 +297,6 @@
 				4D444A3B1A9534AA00D4082F /* Main.storyboard in Resources */,
 				4D444A401A9534AA00D4082F /* LaunchScreen.xib in Resources */,
 				4D444A561A9534DD00D4082F /* Podfile in Resources */,
-				4D444AA61A9660A200D4082F /* TwitterBar.xib in Resources */,
 				4D444A3D1A9534AA00D4082F /* Images.xcassets in Resources */,
 				4D444A5C1A95356200D4082F /* TwitterKitResources.bundle in Resources */,
 			);
@@ -368,6 +369,7 @@
 				4D444A2F1A9534AA00D4082F /* main.m in Sources */,
 				4DD7A1791A9741A4002FE208 /* NSString+Encode.m in Sources */,
 				4D444A381A9534AA00D4082F /* SearchViewController.m in Sources */,
+				4D79DB231A97941F000F6D25 /* BareBonesLoginViewController.m in Sources */,
 				4D444A351A9534AA00D4082F /* Spade.xcdatamodeld in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
