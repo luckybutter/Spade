@@ -11,15 +11,18 @@
 #import "TwitterBar.h"
 #import <TwitterKit/TwitterKit.h>
 #import <QuartzCore/QuartzCore.h>
+#import <AFNetworking/AFNetworking.h>
 
 #define RIPPLE_DURATION 0.70
 #define RIPPLE_DELAY (RIPPLE_DURATION/2.0)
 #define TWITTER_BUTTON_DISAPPEAR_DISTANCE 20
 
+NSString* const twitterSearchURL = @"https://api.twitter.com/1.1/search/tweets.json";
+
 @interface SearchViewController () {
     UIView* whiteLayer;
     UIView* lightPrimary;
-    
+    AFHTTPRequestOperationManager *manager;
 }
 
 @property (weak, nonatomic) IBOutlet TWTRLogInButton *loginButton;
@@ -68,6 +71,18 @@
                                                  name:UIKeyboardWillHideNotification
                                                object:nil];
     
+    _twitterSearchBar.clearButtonMode = UITextFieldViewModeWhileEditing;
+    [_twitterSearchBar setLeftViewMode:UITextFieldViewModeAlways];
+    UIButton *button = [UIButton buttonWithType:UIButtonTypeCustom];
+    button.frame = CGRectMake(0, 0, 30, 30);
+    [button setImage:[UIImage imageNamed:@"twitterWhite"] forState:UIControlStateNormal];
+    button.imageView.contentMode = UIViewContentModeScaleAspectFit;
+    [button setImageEdgeInsets:UIEdgeInsetsMake(0, 5, 0, 0)];
+    [button addTarget:self action:@selector(twitterSearch:) forControlEvents:UIControlEventTouchUpInside];
+    
+    _twitterSearchBar.leftView = button;
+    
+    manager = [AFHTTPRequestOperationManager manager];
     //logging out everytime for ease
 //    [[Twitter sharedInstance] logOut];
 }
@@ -187,6 +202,30 @@
             [_twitterSearchBar becomeFirstResponder];
 //        }];
     }];
+}
+
+- (void)twitterSearch:(UIButton*)sender {
+    
+    if(_twitterSearchBar.text.length) {
+        NSError* error = nil;
+        NSURLRequest* request = [[Twitter sharedInstance].APIClient URLRequestWithMethod:@"GET" URL:twitterSearchURL parameters:@{@"q":_twitterSearchBar.text} error:&error];
+        if (error == nil) {
+            [[Twitter sharedInstance].APIClient sendTwitterRequest:request completion:^(NSURLResponse *response, NSData *data, NSError *connectionError) {
+                if (connectionError == nil) {
+                    NSError* serializationError = nil;
+                    NSDictionary* jsonData = (NSDictionary*)[NSJSONSerialization JSONObjectWithData:data options:NSJSONReadingAllowFragments error:&serializationError];
+                    if (serializationError == nil) {
+                        NSLog(@"%@ %@", response, jsonData.description);
+                    }
+                } else {
+                    
+                }
+                
+            }];
+        }
+        } else {
+            
+        }
 }
 
 

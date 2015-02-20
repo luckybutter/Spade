@@ -21,7 +21,6 @@
         self.textColor = TEXT_COLOR;
         
         //TODO: Come back and finish
-//        self.leftView
     }
     
     return self;

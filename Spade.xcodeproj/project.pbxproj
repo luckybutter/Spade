@@ -23,6 +23,7 @@
 		4D444AA61A9660A200D4082F /* TwitterBar.xib in Resources */ = {isa = PBXBuildFile; fileRef = 4D444AA31A9660A200D4082F /* TwitterBar.xib */; };
 		4D444AA71A9660A200D4082F /* TwitterBar.m in Sources */ = {isa = PBXBuildFile; fileRef = 4D444AA41A9660A200D4082F /* TwitterBar.m */; };
 		4D444AAC1A9681C100D4082F /* UIView+Frame.m in Sources */ = {isa = PBXBuildFile; fileRef = 4D444AAB1A9681C100D4082F /* UIView+Frame.m */; };
+		4DD7A1791A9741A4002FE208 /* NSString+Encode.m in Sources */ = {isa = PBXBuildFile; fileRef = 4DD7A1781A9741A4002FE208 /* NSString+Encode.m */; };
 		DA7D34306977C5D3AFABC69C /* libPods.a in Frameworks */ = {isa = PBXBuildFile; fileRef = DBD097A53E8AADB2A153924A /* libPods.a */; };
 /* End PBXBuildFile section */
 
@@ -65,6 +66,8 @@
 		4D444AA51A9660A200D4082F /* TwitterBar.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TwitterBar.h; sourceTree = "<group>"; };
 		4D444AAA1A9680A900D4082F /* UIView+Frame.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "UIView+Frame.h"; sourceTree = "<group>"; };
 		4D444AAB1A9681C100D4082F /* UIView+Frame.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIView+Frame.m"; sourceTree = "<group>"; };
+		4DD7A1771A974198002FE208 /* NSString+Encode.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "NSString+Encode.h"; sourceTree = "<group>"; };
+		4DD7A1781A9741A4002FE208 /* NSString+Encode.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSString+Encode.m"; sourceTree = "<group>"; };
 		DBD097A53E8AADB2A153924A /* libPods.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libPods.a; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
@@ -170,6 +173,8 @@
 				4D444AA01A95608D00D4082F /* UIColor+Hex.m */,
 				4D444AAA1A9680A900D4082F /* UIView+Frame.h */,
 				4D444AAB1A9681C100D4082F /* UIView+Frame.m */,
+				4DD7A1771A974198002FE208 /* NSString+Encode.h */,
+				4DD7A1781A9741A4002FE208 /* NSString+Encode.m */,
 			);
 			name = Categories;
 			sourceTree = "<group>";
@@ -361,6 +366,7 @@
 				4D444A321A9534AA00D4082F /* AppDelegate.m in Sources */,
 				4D444AAC1A9681C100D4082F /* UIView+Frame.m in Sources */,
 				4D444A2F1A9534AA00D4082F /* main.m in Sources */,
+				4DD7A1791A9741A4002FE208 /* NSString+Encode.m in Sources */,
 				4D444A381A9534AA00D4082F /* SearchViewController.m in Sources */,
 				4D444A351A9534AA00D4082F /* Spade.xcdatamodeld in Sources */,
 			);

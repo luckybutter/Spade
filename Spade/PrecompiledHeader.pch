@@ -10,6 +10,7 @@
 
 #import "UIView+Frame.h"
 #import "UIColor+Hex.h"
+#import "NSString+Encode.h"
 
 #define PRIMARY_COLOR           [UIColor colorWithHexString:@"673AB7"]
 #define DARK_PRIMARY_COLOR      [UIColor colorWithHexString:@"512DA8"]
