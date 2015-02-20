@@ -2,6 +2,7 @@
 <document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="6254" systemVersion="14C109" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" initialViewController="KxG-lK-1jY">
     <dependencies>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="6247"/>
+        <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
     </dependencies>
     <scenes>
         <!--Search View Controller-->
@@ -16,8 +17,8 @@
                         <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <button opaque="NO" userInteractionEnabled="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="bxJ-m0-ks3" userLabel="twitterButton">
-                                <rect key="frame" x="256" y="254.5" width="90" height="90"/>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="bxJ-m0-ks3" userLabel="twitterButton">
+                                <rect key="frame" x="256" y="254" width="90" height="90"/>
                                 <color key="backgroundColor" red="0.29803921568627451" green="0.68627450980392157" blue="0.31372549019607843" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 <constraints>
                                     <constraint firstAttribute="width" constant="90" id="U7U-y0-TN7"/>
@@ -27,6 +28,9 @@
                                 <state key="normal" image="twitterWhite">
                                     <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                                 </state>
+                                <connections>
+                                    <action selector="startSearch:" destination="KxG-lK-1jY" eventType="touchUpInside" id="ran-UW-K2Q"/>
+                                </connections>
                             </button>
                             <button hidden="YES" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="w3b-87-LJz" userLabel="loginButton" customClass="TWTRLogInButton">
                                 <rect key="frame" x="277" y="285" width="46" height="30"/>
@@ -34,37 +38,75 @@
                                     <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                                 </state>
                             </button>
-                            <tableView clipsSubviews="YES" contentMode="scaleToFill" misplaced="YES" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="none" rowHeight="44" sectionHeaderHeight="22" sectionFooterHeight="22" translatesAutoresizingMaskIntoConstraints="NO" id="GHE-vY-mkJ">
-                                <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
-                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
-                                <inset key="separatorInset" minX="0.0" minY="0.0" maxX="0.0" maxY="0.0"/>
+                            <textField hidden="YES" opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" misplaced="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="bezel" minimumFontSize="17" clearButtonMode="whileEditing" translatesAutoresizingMaskIntoConstraints="NO" id="cvY-KE-zrf" userLabel="Twitter Search Bar" customClass="TwitterBar">
+                                <color key="backgroundColor" red="0.0" green="1" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="50" id="wv9-mI-TYh">
+                                        <variation key="heightClass=regular-widthClass=compact" constant="50"/>
+                                    </constraint>
+                                </constraints>
+                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <textInputTraits key="textInputTraits" autocorrectionType="no" spellCheckingType="no" keyboardType="twitter" returnKeyType="search"/>
+                                <variation key="default">
+                                    <mask key="constraints">
+                                        <exclude reference="wv9-mI-TYh"/>
+                                    </mask>
+                                </variation>
+                                <variation key="heightClass=regular-widthClass=compact">
+                                    <mask key="constraints">
+                                        <include reference="wv9-mI-TYh"/>
+                                    </mask>
+                                </variation>
                                 <connections>
-                                    <outlet property="dataSource" destination="KxG-lK-1jY" id="9kR-mh-7bN"/>
-                                    <outlet property="delegate" destination="KxG-lK-1jY" id="PFs-PD-nub"/>
+                                    <outlet property="delegate" destination="KxG-lK-1jY" id="adS-rQ-6bH"/>
                                 </connections>
-                            </tableView>
+                            </textField>
                         </subviews>
                         <color key="backgroundColor" red="0.40392156862745099" green="0.22745098039215686" blue="0.71764705882352942" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                         <constraints>
-                            <constraint firstAttribute="centerY" secondItem="bxJ-m0-ks3" secondAttribute="centerY" constant="0.5" id="BGO-ih-owz"/>
-                            <constraint firstItem="GHE-vY-mkJ" firstAttribute="bottom" secondItem="QkE-P1-7mb" secondAttribute="top" id="S2t-XJ-wsp"/>
-                            <constraint firstAttribute="width" secondItem="GHE-vY-mkJ" secondAttribute="width" id="S36-4p-VgP"/>
-                            <constraint firstAttribute="centerX" secondItem="w3b-87-LJz" secondAttribute="centerX" id="T2y-CT-Z5M"/>
-                            <constraint firstItem="GHE-vY-mkJ" firstAttribute="centerX" secondItem="bxJ-m0-ks3" secondAttribute="centerX" id="TFP-HH-Y2Q"/>
-                            <constraint firstAttribute="height" secondItem="GHE-vY-mkJ" secondAttribute="height" id="a7b-Wr-qlX"/>
-                            <constraint firstAttribute="centerY" secondItem="w3b-87-LJz" secondAttribute="centerY" id="cMo-Z7-JHq"/>
-                            <constraint firstAttribute="centerX" secondItem="bxJ-m0-ks3" secondAttribute="centerX" constant="-0.5" id="oy4-09-bsf"/>
+                            <constraint firstAttribute="centerY" secondItem="w3b-87-LJz" secondAttribute="centerY" id="1k0-zM-RKw"/>
+                            <constraint firstAttribute="centerX" secondItem="w3b-87-LJz" secondAttribute="centerX" id="DSG-f7-Bto"/>
+                            <constraint firstItem="cvY-KE-zrf" firstAttribute="width" secondItem="Cob-Tx-Bgn" secondAttribute="width" id="JWb-ek-AsL"/>
+                            <constraint firstItem="cvY-KE-zrf" firstAttribute="leading" secondItem="Cob-Tx-Bgn" secondAttribute="leadingMargin" constant="-16" id="Slx-qe-UAL"/>
+                            <constraint firstItem="QkE-P1-7mb" firstAttribute="top" secondItem="bxJ-m0-ks3" secondAttribute="bottom" constant="356" id="b8b-qR-PST"/>
+                            <constraint firstAttribute="centerX" secondItem="bxJ-m0-ks3" secondAttribute="centerX" constant="-1" id="mlk-sX-mci"/>
+                            <constraint firstItem="QkE-P1-7mb" firstAttribute="top" secondItem="cvY-KE-zrf" secondAttribute="bottom" id="u4a-rq-zIJ"/>
                         </constraints>
+                        <variation key="default">
+                            <mask key="constraints">
+                                <exclude reference="mlk-sX-mci"/>
+                                <exclude reference="1k0-zM-RKw"/>
+                                <exclude reference="DSG-f7-Bto"/>
+                                <exclude reference="JWb-ek-AsL"/>
+                                <exclude reference="Slx-qe-UAL"/>
+                                <exclude reference="b8b-qR-PST"/>
+                                <exclude reference="u4a-rq-zIJ"/>
+                            </mask>
+                        </variation>
+                        <variation key="heightClass=regular-widthClass=compact">
+                            <mask key="constraints">
+                                <include reference="mlk-sX-mci"/>
+                                <include reference="1k0-zM-RKw"/>
+                                <include reference="DSG-f7-Bto"/>
+                                <include reference="JWb-ek-AsL"/>
+                                <include reference="Slx-qe-UAL"/>
+                                <include reference="b8b-qR-PST"/>
+                                <include reference="u4a-rq-zIJ"/>
+                            </mask>
+                        </variation>
                     </view>
                     <connections>
                         <outlet property="loginButton" destination="w3b-87-LJz" id="LAm-Xb-Bl0"/>
-                        <outlet property="tableView" destination="GHE-vY-mkJ" id="QMy-LT-yQp"/>
                         <outlet property="twitterButton" destination="bxJ-m0-ks3" id="LMB-uC-ahL"/>
+                        <outlet property="twitterButtonBVS" destination="b8b-qR-PST" id="5nf-j9-yMs"/>
+                        <outlet property="twitterButtonH" destination="hky-f4-TGi" id="h5T-rJ-E2h"/>
+                        <outlet property="twitterSearchBar" destination="cvY-KE-zrf" id="C50-kb-xPP"/>
+                        <outlet property="twitterSearchBarBVS" destination="u4a-rq-zIJ" id="jTb-VL-WiZ"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="KES-La-dYU" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="119" y="652"/>
+            <point key="canvasLocation" x="-544.5" y="645"/>
         </scene>
     </scenes>
     <resources>

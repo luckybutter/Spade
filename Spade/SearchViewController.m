@@ -14,14 +14,20 @@
 
 #define RIPPLE_DURATION 0.70
 #define RIPPLE_DELAY (RIPPLE_DURATION/2.0)
+#define TWITTER_BUTTON_DISAPPEAR_DISTANCE 20
 
 @interface SearchViewController () {
     UIView* whiteLayer;
     UIView* lightPrimary;
+    
 }
 
 @property (weak, nonatomic) IBOutlet TWTRLogInButton *loginButton;
 @property (weak, nonatomic) IBOutlet UIButton *twitterButton;
+@property (weak, nonatomic) IBOutlet TwitterBar *twitterSearchBar;
+@property (weak, nonatomic) IBOutlet NSLayoutConstraint *twitterSearchBarBVS;
+@property (weak, nonatomic) IBOutlet NSLayoutConstraint *twitterButtonBVS;
+@property (weak, nonatomic) IBOutlet NSLayoutConstraint *twitterButtonH;
 
 @end
 
@@ -50,9 +56,63 @@
     
     _twitterButton.layer.cornerRadius = _twitterButton.bounds.size.width / 2.0;
     _twitterButton.transform = CGAffineTransformMakeScale(0.001, 0.001);
+    _twitterButtonBVS.constant = self.view.height/2-_twitterButtonH.constant/2;
+    
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(keyboardWasShown:)
+                                                 name:UIKeyboardWillShowNotification
+                                               object:nil];
+    
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(keyboardWillHide:)
+                                                 name:UIKeyboardWillHideNotification
+                                               object:nil];
     
     //logging out everytime for ease
 //    [[Twitter sharedInstance] logOut];
+}
+
+- (void)dealloc {
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
+}
+
+- (void)keyboardWasShown:(NSNotification *)notification
+{
+    NSDictionary *userInfo = [notification userInfo];
+    CGSize keyboardSize = [[[notification userInfo] objectForKey:UIKeyboardFrameBeginUserInfoKey] CGRectValue].size;
+    
+    NSNumber *durationValue = userInfo[UIKeyboardAnimationDurationUserInfoKey];
+    NSTimeInterval animationDuration = durationValue.doubleValue;
+    
+    _twitterSearchBarBVS.constant = keyboardSize.height;
+    
+    [UIView animateWithDuration:animationDuration delay:0 options:UIViewAnimationOptionCurveEaseInOut animations:^{
+        [_twitterSearchBar layoutIfNeeded];
+        _twitterSearchBar.alpha = 1.0;
+    } completion:^(BOOL finished) {
+        
+    }];
+}
+
+- (void) keyboardWillHide:(NSNotification *)notification {
+    
+    NSDictionary *userInfo = [notification userInfo];
+    NSNumber *durationValue = userInfo[UIKeyboardAnimationDurationUserInfoKey];
+    NSTimeInterval animationDuration = durationValue.doubleValue;
+    
+    _twitterSearchBarBVS.constant = 0;
+    [UIView animateWithDuration:animationDuration delay:0 options:UIViewAnimationOptionCurveEaseInOut animations:^{
+        [_twitterSearchBar layoutIfNeeded];
+        _twitterSearchBar.alpha = 0.0;
+    } completion:^(BOOL finished) {
+        _twitterButtonBVS.constant = 10;
+        [UIView animateWithDuration:0.5 delay:0.0 options:UIViewAnimationOptionCurveEaseInOut animations:^{
+            [_twitterButton layoutIfNeeded];
+            _twitterButton.alpha = 1.0;
+        } completion:^(BOOL finished) {
+            _twitterButton.userInteractionEnabled = YES;
+        }];
+    }];
 }
 
 - (void)viewDidAppear:(BOOL)animated {
@@ -75,6 +135,11 @@
     }
 }
 
+- (void)didReceiveMemoryWarning {
+    [super didReceiveMemoryWarning];
+    // Dispose of any resources that can be recreated.
+}
+
 - (void)ripple {
     //Rippling effect with circles
     [UIView animateWithDuration:RIPPLE_DURATION delay:0 options:UIViewAnimationOptionCurveEaseInOut animations:^{
@@ -83,7 +148,6 @@
         [whiteLayer removeFromSuperview];
     }];
 
-    
     [UIView animateWithDuration:RIPPLE_DURATION delay:RIPPLE_DELAY options:UIViewAnimationOptionCurveEaseInOut animations:^{
         lightPrimary.transform = CGAffineTransformMakeScale(0.001, 0.001);
     } completion:^(BOOL finished) {
@@ -96,21 +160,35 @@
             [UIView animateWithDuration:0.2 delay:0.0 options:UIViewAnimationOptionCurveEaseInOut animations:^{
             _twitterButton.transform = CGAffineTransformMakeScale(1, 1);
             } completion:^(BOOL finished) {
+                _twitterButtonBVS.constant = 10;
                 [UIView animateWithDuration:0.5 delay:0.5 options:UIViewAnimationOptionCurveEaseInOut animations:^{
-                    _twitterButton.center = CGPointMake(_twitterButton.center.x, self.view.frame.size.height - _twitterButton.frame.size.height/2 - 5);
+                    [_twitterButton layoutIfNeeded];
                 } completion:^(BOOL finished) {
                     _twitterButton.userInteractionEnabled = YES;
                 }];
             }];
         }];
     }];
-    
 }
 
-- (void)didReceiveMemoryWarning {
-    [super didReceiveMemoryWarning];
-    // Dispose of any resources that can be recreated.
+- (IBAction)startSearch:(id)sender {
+    _twitterButton.userInteractionEnabled = NO;
+    _twitterButtonBVS.constant = -10;
+    [UIView animateWithDuration:0.5 delay:0.0 options:UIViewAnimationOptionCurveEaseInOut animations:^{
+        [_twitterButton layoutIfNeeded];
+        _twitterButton.alpha = 0.0;
+    } completion:^(BOOL finished) {
+//        _twitterSearchBarBVS.constant += _twitterSearchBar.height;
+        _twitterSearchBar.hidden = NO;
+        _twitterSearchBar.alpha = 0.0;
+//        [UIView animateWithDuration:0.5 delay:0.0 options:UIViewAnimationOptionCurveEaseInOut animations:^{
+//            [_twitterSearchBar layoutIfNeeded];
+//        } completion:^(BOOL finished) {
+            [_twitterSearchBar becomeFirstResponder];
+//        }];
+    }];
 }
+
 
 #pragma mark - TableView Delegate Methods
 
@@ -171,5 +249,12 @@
  [self.tableView reloadData];
  }
  */
+
+#pragma mark - UITextField Delegate
+
+- (BOOL)textFieldShouldReturn:(UITextField *)textField {
+    
+    return NO;
+}
 
 @end

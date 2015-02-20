@@ -7,15 +7,9 @@
 //
 
 #import <UIKit/UIKit.h>
-#import <TwitterKit/TwitterKit.h>
 
-@interface TwitterBar : UIView {
+@interface TwitterBar : UITextField {
 
-    void (^loginCompletion)(TWTRSession *session, NSError *error);
-    
 }
-
-@property (weak, nonatomic) IBOutlet UIButton *twitterButton;
-@property (weak, nonatomic) IBOutlet TWTRLogInButton *loginButton;
 
 @end

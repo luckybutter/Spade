@@ -13,12 +13,15 @@
 @end
 
 @implementation TwitterBar
-@synthesize loginButton, twitterButton;
 
 -(id)initWithCoder:(NSCoder *)aDecoder {
     self = [super initWithCoder:aDecoder];
     if (self) {
-
+        self.backgroundColor = ACCENT_COLOR;
+        self.textColor = TEXT_COLOR;
+        
+        //TODO: Come back and finish
+//        self.leftView
     }
     
     return self;
