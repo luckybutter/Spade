@@ -22,7 +22,7 @@ NSString* const TweetTableReuseIdentifier = @"TweetCell";
 NSString* const archiveKey = @"savedTweet";
 NSString* const entityName = @"Tweets";
 
-@interface SearchViewController () <NSFetchedResultsControllerDelegate, UITableViewDataSource, UITableViewDelegate, UITextFieldDelegate, TWTRTweetViewDelegate> {
+@interface SearchViewController () <NSFetchedResultsControllerDelegate, UITableViewDataSource, UITableViewDelegate, UITextFieldDelegate, TWTRTweetViewDelegate, UIScrollViewDelegate> {
     UIView* whiteLayer;
     UIView* lightPrimary;
     AFHTTPRequestOperationManager *manager;
@@ -127,7 +127,7 @@ NSString* const entityName = @"Tweets";
     NSNumber *durationValue = userInfo[UIKeyboardAnimationDurationUserInfoKey];
     NSTimeInterval animationDuration = durationValue.doubleValue;
     
-    UIEdgeInsets contentInsets = UIEdgeInsetsZero;
+    UIEdgeInsets contentInsets = UIEdgeInsetsMake(0.0, 0.0, 0.0, 0.0);
     self.tableView.contentInset = contentInsets;
     self.tableView.scrollIndicatorInsets = contentInsets;
     
@@ -209,14 +209,9 @@ NSString* const entityName = @"Tweets";
         [_twitterButton layoutIfNeeded];
         _twitterButton.alpha = 0.0;
     } completion:^(BOOL finished) {
-//        _twitterSearchBarBVS.constant += _twitterSearchBar.height;
         _twitterSearchBar.hidden = NO;
         _twitterSearchBar.alpha = 0.0;
-//        [UIView animateWithDuration:0.5 delay:0.0 options:UIViewAnimationOptionCurveEaseInOut animations:^{
-//            [_twitterSearchBar layoutIfNeeded];
-//        } completion:^(BOOL finished) {
-            [_twitterSearchBar becomeFirstResponder];
-//        }];
+        [_twitterSearchBar becomeFirstResponder];
     }];
 }
 
@@ -235,6 +230,8 @@ NSString* const entityName = @"Tweets";
                         
                         NSArray* tweetArray = jsonData[@"statuses"];
                         if (tweetArray.count) {
+                            [_twitterSearchBar resignFirstResponder];
+                            [[UIApplication sharedApplication] setStatusBarHidden:YES withAnimation:UIStatusBarAnimationSlide];
                             NSError *error = nil;
                             if (![self.fetchedResultsController performFetch:&error]) {
                                 NSLog(@"Unresolved error %@, %@", error, [error userInfo]);
@@ -375,21 +372,23 @@ NSString* const entityName = @"Tweets";
     }
 }
 
-/*
- // Implementing the above methods to update the table view in response to individual changes may have performance implications if a large number of changes are made simultaneously. If this proves to be an issue, you can instead just implement controllerDidChangeContent: which notifies the delegate that all section and object changes have been processed.
- 
- - (void)controllerDidChangeContent:(NSFetchedResultsController *)controller
- {
- // In the simplest, most efficient, case, reload the table view.
- [self.tableView reloadData];
- }
- */
+#pragma mark - Scroll View Delegate
 
-#pragma mark - UITextField Delegate
-
-- (BOOL)textFieldShouldReturn:(UITextField *)textField {
+- (void)scrollViewDidScroll:(UIScrollView *)aScrollView {
+    CGPoint offset = aScrollView.contentOffset;
+    CGRect bounds = aScrollView.bounds;
+    CGSize size = aScrollView.contentSize;
+    UIEdgeInsets inset = aScrollView.contentInset;
+    float y = offset.y + bounds.size.height - inset.bottom;
+    float h = size.height;
     
-    return NO;
+    if(y> h-100) {
+        _twitterButton.userInteractionEnabled = NO;
+        _twitterButton.alpha = (h-y)/100.0;
+    } else {
+        _twitterButton.alpha = 1.0;
+        _twitterButton.userInteractionEnabled = YES;
+    }
 }
 
 @end
