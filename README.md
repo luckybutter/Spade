@@ -12,5 +12,5 @@ Spade is simple app using Twitter's Search API created with just a small ounce o
 1. Tap the lonely twitter icon
 2. type something to search twitter for
 3. tap the twitter icon
-4.
+4. ...
 5. profit
