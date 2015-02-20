@@ -18,11 +18,16 @@
 #define TWITTER_BUTTON_DISAPPEAR_DISTANCE 20
 
 NSString* const twitterSearchURL = @"https://api.twitter.com/1.1/search/tweets.json";
+NSString* const TweetTableReuseIdentifier = @"TweetCell";
+NSString* const archiveKey = @"savedTweet";
+NSString* const entityName = @"Tweets";
 
-@interface SearchViewController () {
+@interface SearchViewController () <NSFetchedResultsControllerDelegate, UITableViewDataSource, UITableViewDelegate, UITextFieldDelegate, TWTRTweetViewDelegate> {
     UIView* whiteLayer;
     UIView* lightPrimary;
     AFHTTPRequestOperationManager *manager;
+    
+    NSArray* savedTweets;
 }
 
 @property (weak, nonatomic) IBOutlet TWTRLogInButton *loginButton;
@@ -31,6 +36,7 @@ NSString* const twitterSearchURL = @"https://api.twitter.com/1.1/search/tweets.j
 @property (weak, nonatomic) IBOutlet NSLayoutConstraint *twitterSearchBarBVS;
 @property (weak, nonatomic) IBOutlet NSLayoutConstraint *twitterButtonBVS;
 @property (weak, nonatomic) IBOutlet NSLayoutConstraint *twitterButtonH;
+@property (weak, nonatomic) IBOutlet UITableView *tableView;
 
 @end
 
@@ -83,6 +89,9 @@ NSString* const twitterSearchURL = @"https://api.twitter.com/1.1/search/tweets.j
     _twitterSearchBar.leftView = button;
     
     manager = [AFHTTPRequestOperationManager manager];
+    
+    [self.tableView registerClass:[TWTRTweetTableViewCell class] forCellReuseIdentifier:TweetTableReuseIdentifier];
+    savedTweets = [[NSArray alloc] init];
     //logging out everytime for ease
 //    [[Twitter sharedInstance] logOut];
 }
@@ -100,6 +109,9 @@ NSString* const twitterSearchURL = @"https://api.twitter.com/1.1/search/tweets.j
     NSTimeInterval animationDuration = durationValue.doubleValue;
     
     _twitterSearchBarBVS.constant = keyboardSize.height;
+    UIEdgeInsets contentInsets = UIEdgeInsetsMake(0.0, 0.0, keyboardSize.height+_twitterSearchBar.height, 0.0);
+    self.tableView.contentInset = contentInsets;
+    self.tableView.scrollIndicatorInsets = contentInsets;
     
     [UIView animateWithDuration:animationDuration delay:0 options:UIViewAnimationOptionCurveEaseInOut animations:^{
         [_twitterSearchBar layoutIfNeeded];
@@ -114,6 +126,10 @@ NSString* const twitterSearchURL = @"https://api.twitter.com/1.1/search/tweets.j
     NSDictionary *userInfo = [notification userInfo];
     NSNumber *durationValue = userInfo[UIKeyboardAnimationDurationUserInfoKey];
     NSTimeInterval animationDuration = durationValue.doubleValue;
+    
+    UIEdgeInsets contentInsets = UIEdgeInsetsZero;
+    self.tableView.contentInset = contentInsets;
+    self.tableView.scrollIndicatorInsets = contentInsets;
     
     _twitterSearchBarBVS.constant = 0;
     [UIView animateWithDuration:animationDuration delay:0 options:UIViewAnimationOptionCurveEaseInOut animations:^{
@@ -216,6 +232,23 @@ NSString* const twitterSearchURL = @"https://api.twitter.com/1.1/search/tweets.j
                     NSDictionary* jsonData = (NSDictionary*)[NSJSONSerialization JSONObjectWithData:data options:NSJSONReadingAllowFragments error:&serializationError];
                     if (serializationError == nil) {
                         NSLog(@"%@ %@", response, jsonData.description);
+                        
+                        NSArray* tweetArray = jsonData[@"statuses"];
+                        if (tweetArray.count) {
+                            NSError *error = nil;
+                            if (![self.fetchedResultsController performFetch:&error]) {
+                                NSLog(@"Unresolved error %@, %@", error, [error userInfo]);
+                            } else {
+                                if (self.fetchedResultsController.fetchedObjects.count) { //Update
+                                    [self easyFetchAndModify:jsonData];
+                                } else { //Just insert
+                                    [self insertNewObject:jsonData];
+                                }
+                            }
+                        } else {
+                            //Display to the user, no results for X text
+                        }
+                        
                     }
                 } else {
                     
@@ -223,60 +256,123 @@ NSString* const twitterSearchURL = @"https://api.twitter.com/1.1/search/tweets.j
                 
             }];
         }
-        } else {
+    } else {
             
-        }
+    }
 }
 
+- (void)easyFetchAndModify:(NSDictionary*)json {
+    NSFetchRequest* fetchRequest = [[NSFetchRequest alloc] initWithEntityName:entityName];
+    
+    //No need for predicate since I only ever have to store one object
+    
+    NSSortDescriptor *sortDescriptor = [[NSSortDescriptor alloc] initWithKey:archiveKey ascending:NO];
+    NSArray *sortDescriptors = @[sortDescriptor];
+    
+    [fetchRequest setSortDescriptors:sortDescriptors];
+    
+    NSError* error;
+    NSArray* results = [self.managedObjectContext executeFetchRequest:fetchRequest error:&error];
+    if (error == nil){
+        NSArray* tweetArray = [TWTRTweet tweetsWithJSONArray:json[@"statuses"]];
+        NSMutableData *data = [[NSMutableData alloc] init];
+        NSKeyedArchiver *archiver = [[NSKeyedArchiver alloc] initForWritingWithMutableData:data];
+        [archiver encodeObject:tweetArray forKey:archiveKey];
+        [archiver finishEncoding];
+        
+        NSManagedObject* objectToModify = results[0];
+        [objectToModify setValue:data forKey:archiveKey];
+        
+        // Save the context.
+        NSError *error = nil;
+        if (![self.fetchedResultsController.managedObjectContext save:&error]) {
+            NSLog(@"Unresolved error %@, %@", error, [error userInfo]);
+        }
+    } else {
+        
+    }
+        
+}
+
+- (void)insertNewObject:(NSDictionary*)json {
+    
+    NSArray* tweetArray = [TWTRTweet tweetsWithJSONArray:json[@"statuses"]];
+    NSMutableData *data = [[NSMutableData alloc] init];
+    NSKeyedArchiver *archiver = [[NSKeyedArchiver alloc] initForWritingWithMutableData:data];
+    [archiver encodeObject:tweetArray forKey:archiveKey];
+    [archiver finishEncoding];
+    
+    NSManagedObjectContext *context = [self.fetchedResultsController managedObjectContext];
+    NSEntityDescription *entity = [[self.fetchedResultsController fetchRequest] entity];
+    NSManagedObject *newManagedObject = [NSEntityDescription insertNewObjectForEntityForName:[entity name] inManagedObjectContext:context];
+    
+    [newManagedObject setValue:data forKey:archiveKey];
+    
+    // Save the context.
+    NSError *error = nil;
+    if (![context save:&error]) {
+        NSLog(@"Unresolved error %@, %@", error, [error userInfo]);
+    }
+}
 
 #pragma mark - TableView Delegate Methods
 
-- (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
-    return [[self.fetchedResultsController sections] count];
-}
-
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
-    id <NSFetchedResultsSectionInfo> sectionInfo = [self.fetchedResultsController sections][section];
-    return [sectionInfo numberOfObjects];
+    return savedTweets.count;
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
-    UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"Cell" forIndexPath:indexPath];
+    TWTRTweetTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:TweetTableReuseIdentifier forIndexPath:indexPath];
+    [cell configureWithTweet:savedTweets[indexPath.row]];
     return cell;
 }
 
-- (BOOL)tableView:(UITableView *)tableView canEditRowAtIndexPath:(NSIndexPath *)indexPath {
-    return YES;
-}
-
-- (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath {
-    
+- (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
+    TWTRTweet *tweet = savedTweets[indexPath.row];
+    return [TWTRTweetTableViewCell heightForTweet:tweet width:CGRectGetWidth(self.view.bounds)];
 }
 
 #pragma mark - Fetched results controller
 
-
-- (void)controllerWillChangeContent:(NSFetchedResultsController *)controller
+- (NSFetchedResultsController *)fetchedResultsController
 {
-    [self.tableView beginUpdates];
-}
-
-- (void)controller:(NSFetchedResultsController *)controller didChangeSection:(id <NSFetchedResultsSectionInfo>)sectionInfo
-           atIndex:(NSUInteger)sectionIndex forChangeType:(NSFetchedResultsChangeType)type
-{
+    if (_fetchedResultsController != nil) {
+        return _fetchedResultsController;
+    }
     
-}
-
-- (void)controller:(NSFetchedResultsController *)controller didChangeObject:(id)anObject
-       atIndexPath:(NSIndexPath *)indexPath forChangeType:(NSFetchedResultsChangeType)type
-      newIndexPath:(NSIndexPath *)newIndexPath
-{
+    NSFetchRequest *fetchRequest = [[NSFetchRequest alloc] init];
+    NSEntityDescription *entity = [NSEntityDescription entityForName:@"Tweets" inManagedObjectContext:self.managedObjectContext];
+    [fetchRequest setEntity:entity];
+    [fetchRequest setFetchBatchSize:1];
     
+    NSSortDescriptor *sortDescriptor = [[NSSortDescriptor alloc] initWithKey:archiveKey ascending:NO];
+    NSArray *sortDescriptors = @[sortDescriptor];
+    
+    [fetchRequest setSortDescriptors:sortDescriptors];
+    
+    NSFetchedResultsController *aFetchedResultsController = [[NSFetchedResultsController alloc] initWithFetchRequest:fetchRequest managedObjectContext:self.managedObjectContext sectionNameKeyPath:nil cacheName:nil];
+    aFetchedResultsController.delegate = self;
+    self.fetchedResultsController = aFetchedResultsController;
+    
+    return _fetchedResultsController;
 }
 
 - (void)controllerDidChangeContent:(NSFetchedResultsController *)controller
 {
-    [self.tableView endUpdates];
+    NSError* error;
+    if (![self.fetchedResultsController performFetch:&error]) {
+        NSLog(@"Unresolved error %@, %@", error, [error userInfo]);
+    } else {
+        if (self.fetchedResultsController.fetchedObjects.count == 1) {
+            NSData *data = [[NSMutableData alloc] initWithData:[self.fetchedResultsController.fetchedObjects[0] valueForKey:archiveKey]];
+            NSKeyedUnarchiver *unarchiver = [[NSKeyedUnarchiver alloc] initForReadingWithData:data];
+            NSArray *tweetArray=[unarchiver decodeObjectForKey:archiveKey];
+            [unarchiver finishDecoding];
+            savedTweets = tweetArray;
+            
+            [self.tableView reloadData];
+        }
+    }
 }
 
 /*
