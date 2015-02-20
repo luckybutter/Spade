@@ -15,3 +15,6 @@ Spade is simple app using Twitter's Search API created with just a small ounce o
 4. ...
 5. profit
 6. Ponder why the app icon has 3 Aces of Spades
+
+#Want to logout?
+Shake the phone like it owes you money.
