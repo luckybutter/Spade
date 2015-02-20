@@ -412,6 +412,11 @@ NSString* const entityName = @"Tweets";
     }
 }
 
+- (BOOL)textFieldShouldReturn:(UITextField *)textField {
+    [self twitterSearch:nil];
+    return NO;
+}
+
 #pragma mark - UIAlertViewDelegate 
 
 - (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex {
