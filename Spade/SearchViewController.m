@@ -11,7 +11,7 @@
 #import "TwitterBar.h"
 #import <TwitterKit/TwitterKit.h>
 #import <QuartzCore/QuartzCore.h>
-#import <AFNetworking/AFNetworking.h>
+#import "MBProgressHUD.h"
 
 #define RIPPLE_DURATION 0.70
 #define RIPPLE_DELAY (RIPPLE_DURATION/2.0)
@@ -25,7 +25,6 @@ NSString* const entityName = @"Tweets";
 @interface SearchViewController () <NSFetchedResultsControllerDelegate, UITableViewDataSource, UITableViewDelegate, UITextFieldDelegate, TWTRTweetViewDelegate, UIScrollViewDelegate> {
     UIView* whiteLayer;
     UIView* lightPrimary;
-    AFHTTPRequestOperationManager *manager;
     
     NSArray* savedTweets;
 }
@@ -87,8 +86,6 @@ NSString* const entityName = @"Tweets";
     [button addTarget:self action:@selector(twitterSearch:) forControlEvents:UIControlEventTouchUpInside];
     
     _twitterSearchBar.leftView = button;
-    
-    manager = [AFHTTPRequestOperationManager manager];
     
     [self.tableView registerClass:[TWTRTweetTableViewCell class] forCellReuseIdentifier:TweetTableReuseIdentifier];
     savedTweets = [[NSArray alloc] init];
@@ -221,6 +218,8 @@ NSString* const entityName = @"Tweets";
         NSError* error = nil;
         NSURLRequest* request = [[Twitter sharedInstance].APIClient URLRequestWithMethod:@"GET" URL:twitterSearchURL parameters:@{@"q":_twitterSearchBar.text} error:&error];
         if (error == nil) {
+            MBProgressHUD *apiQueryHUD = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+            [apiQueryHUD setLabelText:@"Searching now..."];
             [[Twitter sharedInstance].APIClient sendTwitterRequest:request completion:^(NSURLResponse *response, NSData *data, NSError *connectionError) {
                 if (connectionError == nil) {
                     NSError* serializationError = nil;
@@ -230,6 +229,7 @@ NSString* const entityName = @"Tweets";
                         
                         NSArray* tweetArray = jsonData[@"statuses"];
                         if (tweetArray.count) {
+                            [apiQueryHUD hide:YES];
                             [_twitterSearchBar resignFirstResponder];
                             [[UIApplication sharedApplication] setStatusBarHidden:YES withAnimation:UIStatusBarAnimationSlide];
                             NSError *error = nil;
@@ -244,17 +244,28 @@ NSString* const entityName = @"Tweets";
                             }
                         } else {
                             //Display to the user, no results for X text
+                            [apiQueryHUD hide:YES];
+                            MBProgressHUD *noResultsHUD = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+                            [noResultsHUD setLabelText:@"Searching now..."];
+                            [noResultsHUD hide:YES afterDelay:3.0];
+                            
                         }
                         
                     }
                 } else {
-                    
+                    MBProgressHUD *noConnection = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+                    [noConnection setLabelText:@"Sorry"];
+                    [noConnection setDetailsLabelText:@"Please check your connection and try again."];
+                    [noConnection hide:YES afterDelay:3.0];
                 }
                 
             }];
         }
     } else {
-            
+        MBProgressHUD *tryTyping = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+        [tryTyping setLabelText:@"Hi"];
+        [tryTyping setDetailsLabelText:@"Try typing something first and try again. :)"];
+        [tryTyping hide:YES afterDelay:3.0];
     }
 }
 
